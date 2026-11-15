@@ -190,4 +190,25 @@ public class Agenda implements Serializable {
         }
         return dia;
     }
+
+    public int getTiempoLibre(LocalDate fecha) throws ArgumentoException {
+        if(fecha==null){
+            throw new ArgumentoException("La fecha no puede ser nula");
+        }
+        int ocupado=0;
+        for(Cita c:citas){
+            if(c.getFecha().equals(fecha)){
+                ocupado+=c.getDuracion();
+            }
+        }
+        return getJornada()-ocupado;
+    }
+    @Override
+    public String toString() {
+        String texto = "Agenda " + apertura + "-" + cierre;
+        for (Cita c : citas) {
+            texto += "\n" + c;
+        }
+        return texto;
+    }
 }
