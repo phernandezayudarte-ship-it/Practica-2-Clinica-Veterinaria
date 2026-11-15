@@ -134,4 +134,20 @@ public class Agenda implements Serializable {
             throw e;       // y vuelve a lanzar el error
         }
     }
+
+    public ArrayList<Cita> getCitasEntre(LocalDate desde, LocalDate hasta) throws ArgumentoException {
+        if(desde==null||hasta==null){
+            throw new ArgumentoException("Desde y hasta no pueden ser nulos");
+        }
+        if (hasta.isBefore(desde)) {
+            throw new ArgumentoException("Hasta no puede empezar antes que desde");
+        }
+        ArrayList<Cita> resultado = new ArrayList<>();
+        for (Cita c : citas) {
+            if ( !c.getFecha().isBefore(desde) && !c.getFecha().isAfter(hasta) ) {
+                resultado.add(c);
+            }
+        }
+        return resultado;
+    }
 }
