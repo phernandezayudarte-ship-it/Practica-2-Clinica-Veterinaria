@@ -33,6 +33,18 @@ public class Main {
 
         agenda.reservar(new CitaPrueba("Carmen",lunes,LocalTime.of(10,30),30));
 
+        try{
+            agenda.retrasar("Ana",lunes,15);
+            IO.println("Error: debería haber fallado(solapamiento)");
+        } catch (ArgumentoException e){
+            IO.println("Ok: "+e.getMessage());
+        }
+
+        agenda.retrasar("David",lunes,30);
+        agenda.cancelar("Bruno",lunes);
+
+
+
 
         for (int i = 0; i < agenda.getNumCitas(); i++) {
             IO.println(agenda.getCitaEn(i));
