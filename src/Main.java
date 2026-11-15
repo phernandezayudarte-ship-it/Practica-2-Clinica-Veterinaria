@@ -43,6 +43,13 @@ public class Main {
         agenda.retrasar("David",lunes,30);
         agenda.cancelar("Bruno",lunes);
 
+        IO.println(agenda.getTiempoLibre(lunes));
+        IO.println(agenda.getJornada());
+        IO.println(agenda.primerHueco(lunes,60));
+        IO.println(agenda.primerHueco(lunes,90));
+        IO.println(agenda.primerDiaConHueco(lunes,600));
+        IO.println(agenda.getCitasEntre(lunes,lunes.plusDays(1)).size());
+
 
 
 
