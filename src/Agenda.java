@@ -150,4 +150,29 @@ public class Agenda implements Serializable {
         }
         return resultado;
     }
+    private LocalTime buscarHueco(LocalDate fecha, int d) throws ArgumentoException {
+        if(estaLibre(fecha,apertura,d)){
+            return apertura;
+        }
+        for(Cita c:citas){
+            if(c.getFecha().equals(fecha)&&estaLibre(fecha,c.getFin(),d)){
+                return c.getFin();
+            }
+        }
+        return null;
+    }
+    public boolean hayHueco(LocalDate fecha, int d) throws ArgumentoException {
+        if(buscarHueco(fecha,d)==null){
+            return false;
+        }
+        return true;
+    }
+
+    public LocalTime primerHueco(LocalDate fecha, int d) throws ArgumentoException {
+        LocalTime h=buscarHueco(fecha,d);
+        if(h==null){
+            throw new ArgumentoException("No hay hueco");
+        }
+        return h;
+    }
 }
