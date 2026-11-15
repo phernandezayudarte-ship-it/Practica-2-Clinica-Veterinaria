@@ -175,4 +175,19 @@ public class Agenda implements Serializable {
         }
         return h;
     }
+
+    public int getJornada() {
+        return (cierre.getHour()*60+cierre.getMinute())-(apertura.getHour()*60+apertura.getMinute());
+    }
+
+    public LocalDate primerDiaConHueco(LocalDate desde, int d) throws ArgumentoException {
+        if(desde==null||d<=0||d>getJornada()){
+            throw new ArgumentoException("desde no puede ser nulo y la duración debe ser positiva y no mayor que la jornada");
+        }
+        LocalDate dia=desde;
+        while (!hayHueco(dia,d)){
+            dia=dia.plusDays(1);
+        }
+        return dia;
+    }
 }
