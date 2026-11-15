@@ -115,4 +115,23 @@ public class Agenda implements Serializable {
         }
         citas.add(posicion, c);
     }
+
+    public void cancelar(String cliente, LocalDate fecha) throws ArgumentoException {
+        Cita c=getCitaDe(cliente,fecha);
+        citas.remove(c);
+    }
+
+    public void retrasar(String cliente, LocalDate fecha, int minutos) throws ArgumentoException {
+        if(minutos<=0){
+            throw new ArgumentoException("Los minutos no pueden ser menor o igual a 0");
+        }
+        Cita c = getCitaDe(cliente, fecha);
+        cancelar(cliente, fecha);
+        try {
+            reservar(c.conInicio(c.getInicio().plusMinutes(minutos)));
+        } catch (ArgumentoException e) {
+            reservar(c);   // restaura la cita original
+            throw e;       // y vuelve a lanzar el error
+        }
+    }
 }
