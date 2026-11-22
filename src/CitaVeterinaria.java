@@ -92,6 +92,21 @@ public abstract class CitaVeterinaria extends Cita {
         return h.getHour() * 60 + h.getMinute();
     }
 
+    public void terminar(Resultado resultado, String notas) throws ArgumentoException {
+        if (resultado == null) throw new ArgumentoException("El resultado no puede ser nulo");
+        if (this.resultado != null) throw new ArgumentoException("La cita ya estaba terminada");
+        String n = texto(notas, "notas", true);
+        this.resultado = resultado;
+        this.notas = n;
+    }
+
+    public int ingreso() {
+        if (resultado == Resultado.ATENDIDA) {
+            return precio();
+        }
+        return 0;
+    }
+
     protected String camposComunes() {
         return getFecha() + " " + getInicio() + "-" + getFin() + " | " + mascota
                 + " | " + veterinario.getNombre();
