@@ -62,6 +62,23 @@ public class Main {
         System.out.println(toby);
         System.out.println("Edad: " + toby.getEdad(LocalDate.of(2026, 11, 22)));
         System.out.println("Duración consulta: " + toby.getEspecie().getDuracionConsulta());
+        Mascota misi = new Mascota("M002", "Misi", "Bruno López",
+                Especie.GATO, LocalDate.of(2022, 6, 1), 4000);
+        Mascota kiwi = new Mascota("M003", "Kiwi", "Carla Ruz",
+                Especie.EXOTICO, LocalDate.of(2024, 1, 10), 1800);
+        Mascota luna = new Mascota("M004", "Luna", "Diego Martín",
+                Especie.PERRO, LocalDate.of(2025, 2, 20), 8000);
+        System.out.println(misi);
+        System.out.println("Edad: " + misi.getEdad(LocalDate.of(2026, 11, 22)));
+        System.out.println("Duración consulta: " + misi.getEspecie().getDuracionConsulta());
+
+        System.out.println(kiwi);
+        System.out.println("Edad: " + kiwi.getEdad(LocalDate.of(2026, 11, 22)));
+        System.out.println("Duración consulta: " + kiwi.getEspecie().getDuracionConsulta());
+
+        System.out.println(luna);
+        System.out.println("Edad: " + luna.getEdad(LocalDate.of(2026, 11, 22)));
+        System.out.println("Duración consulta: " + luna.getEspecie().getDuracionConsulta());
     }
 
 }
