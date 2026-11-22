@@ -1,4 +1,6 @@
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public abstract class CitaVeterinaria extends Cita {
@@ -53,6 +55,42 @@ public abstract class CitaVeterinaria extends Cita {
     public abstract Especialidad especialidadRequerida();
 
     public abstract String descripcion();
+
+    public final void comprobarNormas(LocalDateTime ahora) throws ClinicaException, ArgumentoException {
+        if (ahora == null) throw new ArgumentoException("La fecha y hora actual no puede ser nula");
+
+        if (getFecha().getDayOfWeek() == DayOfWeek.SUNDAY) {
+            throw new ClinicaException("La clínica cierra los domingos");
+        }
+
+        int apertura = enMinutos(veterinario.getAgenda().getApertura());
+        int cierre = enMinutos(veterinario.getAgenda().getCierre());
+        int inicio = enMinutos(getInicio());
+        if (inicio < apertura || inicio + getDuracion() > cierre) {
+            throw new ClinicaException("La cita debe empezar y terminar dentro del horario de "
+                    + veterinario.getAgenda().getApertura() + " a " + veterinario.getAgenda().getCierre());
+        }
+
+        if (LocalDateTime.of(getFecha(), getInicio()).isBefore(ahora)) {
+            throw new ClinicaException("No se puede programar una cita en el pasado");
+        }
+
+        if (!veterinario.puedeAtender(especialidadRequerida())) {
+            throw new ClinicaException(veterinario.getNombre() + " no tiene la especialidad exigida ("
+                    + especialidadRequerida() + ")");
+        }
+
+        comprobarNormasPropias(ahora);
+    }
+
+    protected void comprobarNormasPropias(LocalDateTime ahora) throws ClinicaException {
+        // Por defecto no hay normas propias; Cirugia lo redefine
+    }
+
+    // Minutos desde las 00:00, para que una cita que pase de medianoche no parezca acabar pronto
+    private static int enMinutos(LocalTime h) {
+        return h.getHour() * 60 + h.getMinute();
+    }
 
     protected String camposComunes() {
         return getFecha() + " " + getInicio() + "-" + getFin() + " | " + mascota
