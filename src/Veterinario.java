@@ -30,4 +30,7 @@ public class Veterinario implements Serializable {
     public Agenda getAgenda() {
         return agenda;
     }
+    public boolean puedeAtender(Especialidad requerida) {
+        return requerida == Especialidad.GENERAL || requerida == especialidad;
+    }
 }
