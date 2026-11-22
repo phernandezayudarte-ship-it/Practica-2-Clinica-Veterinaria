@@ -92,6 +92,39 @@ public class Main {
         System.out.println(v2.puedeAtender(Especialidad.CIRUGIA));
         System.out.println(v3.puedeAtender(Especialidad.GENERAL));
         System.out.println(v3.puedeAtender(Especialidad.CIRUGIA));
+
+        // ---- Hito 2: jerarquía de citas (escenario del apartado 7) ----
+        LocalDate lunes19 = LocalDate.of(2026, 10, 19);
+        LocalDate martes20 = LocalDate.of(2026, 10, 20);
+        LocalDate miercoles21 = LocalDate.of(2026, 10, 21);
+        LocalDate jueves22 = LocalDate.of(2026, 10, 22);
+
+        // Consultas: precio, tipo, duración y especialidad según la especie,
+        // calculados a través de variables de tipo CitaVeterinaria (polimorfismo)
+        CitaVeterinaria cita1 = new Consulta(toby, v1, lunes19, LocalTime.of(9, 0), "cojera");
+        CitaVeterinaria cita2 = new Consulta(kiwi, v3, lunes19, LocalTime.of(10, 0), "revisión anual");
+        CitaVeterinaria cita4 = new Consulta(luna, v1, miercoles21, LocalTime.of(11, 0), "vómitos");
+        CitaVeterinaria cita5 = new Consulta(misi, v1, jueves22, LocalTime.of(12, 0), "pérdida de apetito");
+        CitaVeterinaria[] consultas = {cita1, cita2, cita4, cita5};
+        for (CitaVeterinaria c : consultas) {
+            System.out.println(c);
+            System.out.println("  " + c.getTipo() + " de " + c.getMascota().getEspecie()
+                    + ": precio " + c.precio() + ", duración " + c.getDuracion()
+                    + " min, especialidad " + c.especialidadRequerida());
+        }
+
+        try {
+            new Consulta(toby, v1, lunes19, LocalTime.of(13, 0), "   ");
+            System.out.println("ERROR: debería haber fallado (motivo vacío)");
+        } catch (ArgumentoException e) {
+            System.out.println("OK: " + e.getMessage());
+        }
+        try {
+            new Consulta(null, v1, lunes19, LocalTime.of(13, 0), "revisión");
+            System.out.println("ERROR: debería haber fallado (mascota nula)");
+        } catch (ArgumentoException e) {
+            System.out.println("OK: " + e.getMessage());
+        }
     }
 
 }
