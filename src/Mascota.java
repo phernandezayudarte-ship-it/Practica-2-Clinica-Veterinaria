@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Mascota implements Serializable {
 
@@ -41,5 +42,8 @@ public class Mascota implements Serializable {
 
     public int getPeso() {
         return peso;
+    }
+    public int getEdad(LocalDate hoy) {
+        return Period.between(nacimiento,hoy).getYears();
     }
 }
