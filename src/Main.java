@@ -125,6 +125,21 @@ public class Main {
         } catch (ArgumentoException e) {
             System.out.println("OK: " + e.getMessage());
         }
+
+        // Cirugía: precio con la anestesia según el peso (ejemplo del enunciado: 222,00 €)
+        CitaVeterinaria cita3 = new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 120,
+                "extirpación de un quiste");
+        System.out.println(cita3);
+        System.out.println("  " + cita3.getTipo() + ": precio " + cita3.precio()
+                + " (esperado 22200), duración " + cita3.getDuracion()
+                + " min, especialidad " + cita3.especialidadRequerida());
+
+        try {
+            new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 120, "");
+            System.out.println("ERROR: debería haber fallado (intervención vacía)");
+        } catch (ArgumentoException e) {
+            System.out.println("OK: " + e.getMessage());
+        }
     }
 
 }
