@@ -79,6 +79,19 @@ public class Main {
         System.out.println(luna);
         System.out.println("Edad: " + luna.getEdad(LocalDate.of(2026, 11, 22)));
         System.out.println("Duración consulta: " + luna.getEspecie().getDuracionConsulta());
+
+        Veterinario v1 = new Veterinario("V1", "Laura Martín", Especialidad.GENERAL);
+        Veterinario v2 = new Veterinario("V2", "Pablo Ortega", Especialidad.CIRUGIA);
+        Veterinario v3 = new Veterinario("V3", "Elena Sanz", Especialidad.EXOTICOS);
+
+        System.out.println(v1);
+        System.out.println(v2);
+        System.out.println(v3);
+
+        System.out.println(v1.puedeAtender(Especialidad.CIRUGIA));
+        System.out.println(v2.puedeAtender(Especialidad.CIRUGIA));
+        System.out.println(v3.puedeAtender(Especialidad.GENERAL));
+        System.out.println(v3.puedeAtender(Especialidad.CIRUGIA));
     }
 
 }
