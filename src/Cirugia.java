@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Cirugia extends CitaVeterinaria {
@@ -39,6 +40,21 @@ public class Cirugia extends CitaVeterinaria {
     @Override
     public String descripcion() {
         return "Intervención: " + intervencion;
+    }
+
+    @Override
+    protected void comprobarNormasPropias(LocalDateTime ahora) throws ClinicaException {
+        if (!getFecha().isAfter(ahora.toLocalDate())) {
+            throw new ClinicaException("Una cirugía debe programarse al menos el día anterior");
+        }
+        if (getDuracion() < DURACION_MINIMA || getDuracion() > DURACION_MAXIMA
+                || getDuracion() % DURACION_MINIMA != 0) {
+            throw new ClinicaException("Una cirugía dura de " + DURACION_MINIMA + " a " + DURACION_MAXIMA
+                    + " minutos en tramos de " + DURACION_MINIMA);
+        }
+        if (getFin().isAfter(FIN_MANANA)) {
+            throw new ClinicaException("Una cirugía debe terminar como muy tarde a las " + FIN_MANANA);
+        }
     }
 
     @Override
