@@ -1,6 +1,7 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Main {
@@ -139,6 +140,64 @@ public class Main {
             System.out.println("ERROR: debería haber fallado (intervención vacía)");
         } catch (ArgumentoException e) {
             System.out.println("OK: " + e.getMessage());
+        }
+
+        // Normas: una que se cumple y otra que falla por cada norma.
+        // Fecha y hora actual fija: viernes 16/10/2026 a las 10:00
+        LocalDateTime ahora = LocalDateTime.of(2026, 10, 16, 10, 0);
+        LocalDate jueves15 = LocalDate.of(2026, 10, 15);
+        LocalDate viernes16 = LocalDate.of(2026, 10, 16);
+        LocalDate sabado17 = LocalDate.of(2026, 10, 17);
+        LocalDate domingo18 = LocalDate.of(2026, 10, 18);
+
+        probarNormas("cita 1 del escenario", cita1, ahora, true);
+        probarNormas("cita 2 del escenario", cita2, ahora, true);
+        probarNormas("cita 3 del escenario", cita3, ahora, true);
+        probarNormas("cita 4 del escenario", cita4, ahora, true);
+        probarNormas("cita 5 del escenario", cita5, ahora, true);
+
+        // Domingo cerrado
+        probarNormas("consulta en sábado", new Consulta(misi, v1, sabado17, LocalTime.of(10, 0), "revisión"), ahora, true);
+        probarNormas("consulta en domingo", new Consulta(misi, v1, domingo18, LocalTime.of(10, 0), "revisión"), ahora, false);
+
+        // Horario de 9:00 a 20:00 (casos límite)
+        probarNormas("empieza justo a las 9:00", new Consulta(misi, v1, lunes19, LocalTime.of(9, 0), "revisión"), ahora, true);
+        probarNormas("empieza a las 8:45", new Consulta(misi, v1, lunes19, LocalTime.of(8, 45), "revisión"), ahora, false);
+        probarNormas("termina justo a las 20:00", new Consulta(misi, v1, lunes19, LocalTime.of(19, 30), "revisión"), ahora, true);
+        probarNormas("termina a las 20:15", new Consulta(misi, v1, lunes19, LocalTime.of(19, 45), "revisión"), ahora, false);
+        probarNormas("exótico (45 min) termina justo a las 20:00", new Consulta(kiwi, v3, lunes19, LocalTime.of(19, 15), "revisión"), ahora, true);
+
+        // No se programa en el pasado
+        probarNormas("hoy a las 12:00", new Consulta(misi, v1, viernes16, LocalTime.of(12, 0), "revisión"), ahora, true);
+        probarNormas("hoy a las 9:00", new Consulta(misi, v1, viernes16, LocalTime.of(9, 0), "revisión"), ahora, false);
+        probarNormas("ayer", new Consulta(misi, v1, jueves15, LocalTime.of(12, 0), "revisión"), ahora, false);
+
+        // Especialidad exigida
+        probarNormas("perro con Exóticos", new Consulta(toby, v3, lunes19, LocalTime.of(12, 0), "revisión"), ahora, true);
+        probarNormas("exótico con General", new Consulta(kiwi, v1, lunes19, LocalTime.of(12, 0), "revisión"), ahora, false);
+        probarNormas("cirugía con General", new Cirugia(toby, v1, martes20, LocalTime.of(9, 0), 60, "sutura"), ahora, false);
+
+        // Cirugía: al menos el día anterior
+        probarNormas("cirugía mañana", new Cirugia(toby, v2, sabado17, LocalTime.of(9, 0), 60, "sutura"), ahora, true);
+        probarNormas("cirugía hoy", new Cirugia(toby, v2, viernes16, LocalTime.of(12, 0), 60, "sutura"), ahora, false);
+
+        // Cirugía: termina como muy tarde a las 14:00
+        probarNormas("cirugía termina justo a las 14:00", new Cirugia(toby, v2, martes20, LocalTime.of(12, 0), 120, "sutura"), ahora, true);
+        probarNormas("cirugía termina a las 14:30", new Cirugia(toby, v2, martes20, LocalTime.of(12, 30), 120, "sutura"), ahora, false);
+
+        // Cirugía: de 30 a 240 minutos en tramos de 30
+        probarNormas("cirugía de 30 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 30, "sutura"), ahora, true);
+        probarNormas("cirugía de 240 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 240, "sutura"), ahora, true);
+        probarNormas("cirugía de 45 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 45, "sutura"), ahora, false);
+        probarNormas("cirugía de 270 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 270, "sutura"), ahora, false);
+    }
+
+    private static void probarNormas(String caso, CitaVeterinaria cita, LocalDateTime ahora, boolean debeCumplir) {
+        try {
+            cita.comprobarNormas(ahora);
+            System.out.println((debeCumplir ? "OK: " : "ERROR: debería haber fallado: ") + caso);
+        } catch (ClinicaException | ArgumentoException e) {
+            System.out.println((debeCumplir ? "ERROR: " : "OK: ") + caso + " -> " + e.getMessage());
         }
     }
 
