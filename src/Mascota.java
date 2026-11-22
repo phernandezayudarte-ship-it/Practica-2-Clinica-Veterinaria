@@ -46,4 +46,9 @@ public class Mascota implements Serializable {
     public int getEdad(LocalDate hoy) {
         return Period.between(nacimiento,hoy).getYears();
     }
+
+    @Override
+    public String toString() {
+        return nombre + " (" + especie + ")";
+    }
 }
