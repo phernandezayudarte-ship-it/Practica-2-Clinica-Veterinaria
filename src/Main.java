@@ -56,5 +56,12 @@ public class Main {
         for (int i = 0; i < agenda.getNumCitas(); i++) {
             IO.println(agenda.getCitaEn(i));
         }
+
+        Mascota toby = new Mascota("M001", "Toby", "Ana García",
+                Especie.PERRO, LocalDate.of(2020, 3, 15), 28000);
+        System.out.println(toby);
+        System.out.println("Edad: " + toby.getEdad(LocalDate.of(2026, 11, 22)));
+        System.out.println("Duración consulta: " + toby.getEspecie().getDuracionConsulta());
     }
+
 }
