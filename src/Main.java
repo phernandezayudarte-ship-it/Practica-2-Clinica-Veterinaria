@@ -190,6 +190,33 @@ public class Main {
         probarNormas("cirugía de 240 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 240, "sutura"), ahora, true);
         probarNormas("cirugía de 45 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 45, "sutura"), ahora, false);
         probarNormas("cirugía de 270 min", new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 270, "sutura"), ahora, false);
+
+        // Terminar: atendida, no presentada y cancelada, con sus importes
+        cita1.terminar(Resultado.ATENDIDA, "Esguince leve, reposo");
+        cita2.terminar(Resultado.ATENDIDA, "Sano");
+        cita3.terminar(Resultado.ATENDIDA, "Sin complicaciones");
+        cita4.terminar(Resultado.NO_PRESENTADO, "");
+        cita5.terminar(Resultado.CANCELADA, "");
+        CitaVeterinaria[] escenario = {cita1, cita2, cita3, cita4, cita5};
+        int ingresos = 0;
+        for (CitaVeterinaria c : escenario) {
+            System.out.println(c + " -> ingreso " + c.ingreso());
+            ingresos += c.ingreso();
+        }
+        System.out.println("Ingresos totales: " + ingresos + " (esperado 29200)");
+
+        try {
+            cita1.terminar(Resultado.CANCELADA, "");
+            System.out.println("ERROR: debería haber fallado (cita ya terminada)");
+        } catch (ArgumentoException e) {
+            System.out.println("OK: " + e.getMessage());
+        }
+        try {
+            new Consulta(misi, v1, jueves22, LocalTime.of(12, 0), "revisión").terminar(null, "");
+            System.out.println("ERROR: debería haber fallado (resultado nulo)");
+        } catch (ArgumentoException e) {
+            System.out.println("OK: " + e.getMessage());
+        }
     }
 
     private static void probarNormas(String caso, CitaVeterinaria cita, LocalDateTime ahora, boolean debeCumplir) {
