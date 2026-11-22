@@ -33,4 +33,9 @@ public class Veterinario implements Serializable {
     public boolean puedeAtender(Especialidad requerida) {
         return requerida == Especialidad.GENERAL || requerida == especialidad;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " (" + especialidad + ")";
+    }
 }
