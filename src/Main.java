@@ -217,6 +217,16 @@ public class Main {
         } catch (ArgumentoException e) {
             System.out.println("OK: " + e.getMessage());
         }
+
+        // retrasar crea la cita nueva con conInicio y conserva el tipo de cita
+        v3.getAgenda().reservar(new Consulta(kiwi, v3, lunes19, LocalTime.of(10, 0), "revisión anual"));
+        v2.getAgenda().reservar(new Cirugia(toby, v2, martes20, LocalTime.of(9, 0), 120, "extirpación de un quiste"));
+        v3.getAgenda().retrasar("M003", lunes19, 30);
+        v2.getAgenda().retrasar("M001", martes20, 60);
+        Cita retrasada1 = v3.getAgenda().getCitaDe("M003", lunes19);
+        Cita retrasada2 = v2.getAgenda().getCitaDe("M001", martes20);
+        System.out.println(retrasada1 + " -> sigue siendo Consulta: " + (retrasada1 instanceof Consulta));
+        System.out.println(retrasada2 + " -> sigue siendo Cirugia: " + (retrasada2 instanceof Cirugia));
     }
 
     private static void probarNormas(String caso, CitaVeterinaria cita, LocalDateTime ahora, boolean debeCumplir) {
